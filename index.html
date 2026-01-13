@@ -559,22 +559,25 @@ src="https://www.facebook.com/tr?id=901838652265558&ev=PageView&noscript=1"
 const eventId = 'lead_' + Date.now();
 
 // fire the Pixel Lead event
-fbq('track', 'Lead', {
-    email: email,
-    location: location
-}, { eventID: eventId });
+fbq('track', 'Lead', {}, { eventID: eventId });
+
 
 
             // send form data to your backend to trigger CAPI
-await fetch('https://capi-practice-site-backend.onrender.com/lead', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        email: email,
-        location: location,
-        event_id: eventId
-    })
-});
+try {
+    await fetch('https://capi-practice-site-backend.onrender.com/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            email: email,
+            location: location,
+            event_id: eventId
+        })
+    });
+} catch (err) {
+    console.error('CAPI failed:', err);
+}
+
 
 
             // Build the Google Form submission URL
